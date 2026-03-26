@@ -11,8 +11,32 @@ export const useStore = defineStore('account', () => {
     ])
     const selectedAccount = ref<Account | null>(null)
 
+    const loadFromLocalStorage = () => {
+        try {
+            const saved = localStorage.getItem("account");
+            if (saved) {
+                const parsed = JSON.parse(saved)
+                if(Array.isArray(parsed)) {
+                    accounts.value = parsed
+                }
+            }
+        }catch(error){
+            console.error(error)
+        }
+    }
+
+    const saveToLocalStorage = () => {
+        try {
+            localStorage.setItem('accounts', JSON.stringify(accounts.value))
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
+
     const addAccount = (account: Account) => {
         accounts.value.push(account)
+        saveToLocalStorage()
     }
 
     const addEmptyAccount = () => {
@@ -24,6 +48,7 @@ export const useStore = defineStore('account', () => {
             isSaved: false,
         }
         accounts.value.unshift(newAccount)
+        saveToLocalStorage()
     }
 
     const updateAccount = (id: string, updates: Partial<Account>) => {
@@ -31,7 +56,9 @@ export const useStore = defineStore('account', () => {
         if (account) {
             Object.assign(account, updates)
         }
+        saveToLocalStorage()
     }
+
 
     const removeAccount = (id: string) => {
         const index = accounts.value.findIndex(acc => acc.id === id)
@@ -44,11 +71,15 @@ export const useStore = defineStore('account', () => {
         } else {
             console.log('Account not found:', id)
         }
+        saveToLocalStorage()
     }
 
     const selectAccount = (account: Account) => {
         selectedAccount.value = account
+        saveToLocalStorage()
     }
+
+    loadFromLocalStorage()
 
     return {
         accounts,
@@ -58,5 +89,7 @@ export const useStore = defineStore('account', () => {
         updateAccount,
         removeAccount,
         selectAccount,
+        loadFromLocalStorage,
+        saveToLocalStorage,
     }
 })

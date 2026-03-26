@@ -71,9 +71,10 @@ const validate = () => {
   errors.value.name = false;
   errors.value.phoneNumber = false;
 
+  const nameRegex = /^[A-Za-zА-Яа-яёЁ\s-]+$/
   const phoneRegex = /^(\+7|8)[\s-]?\(?(\d{3})\)?[\s-]?(\d{3})[\s-]?(\d{2})[\s-]?(\d{2})$/
 
-  if (localData.value.name.trim().length < 2) {
+  if (localData.value.name.trim().length < 2 && !nameRegex.test(localData.value.name)) {
     errors.value.name = true;
     isValid = false;
   }
