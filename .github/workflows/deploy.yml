@@ -38,6 +38,8 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          BASE_URL: /${{ github.event.repository.name }}/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -48,5 +50,7 @@ jobs:
           path: 'dist'
 
       - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
         id: deployment
         uses: actions/deploy-pages@v4
