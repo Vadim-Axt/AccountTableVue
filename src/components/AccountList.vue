@@ -22,7 +22,6 @@ import { useStore } from '../store/account.store.ts';
 import AccountItem from './AccountItem.vue';
 
 const store = useStore();
-// При загрузке компонента, если аккаунтов нет — создаем одно пустое поле по умолчанию
 onMounted(() => {
   if (store.accounts.length === 0) {
     store.addEmptyAccount();
@@ -40,7 +39,6 @@ onMounted(() => {
   flex-direction: column;
 }
 
-/* Когда аккаунтов нет, контент центрируется */
 .is-centered-layout {
   justify-content: center;
   align-items: center;

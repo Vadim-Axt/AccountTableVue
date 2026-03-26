@@ -11,8 +11,9 @@
           v-model="localData.phoneNumber"
           :disabled="account.isSaved"
           placeholder="Телефон"
-          max="12"
+          maxlength="15"
           type="tel"
+          value="+7"
           inputmode="numeric"
           :class="{ 'input-error': errors.phoneNumber }"
       />
@@ -47,14 +48,12 @@ const props = defineProps<{
 
 const store = useStore();
 
-// Локальное состояние для формы
 const localData = ref({
   name: props.account.name,
   phoneNumber: props.account.phoneNumber,
   role: props.account.role,
 });
 
-// Состояние ошибок
 const errors = ref({
   name: false,
   phoneNumber: false,
@@ -72,14 +71,14 @@ const validate = () => {
   errors.value.name = false;
   errors.value.phoneNumber = false;
 
-  if (!localData.value.name.trim()) {
+  const phoneRegex = /^(\+7|8)[\s-]?\(?(\d{3})\)?[\s-]?(\d{3})[\s-]?(\d{2})[\s-]?(\d{2})$/
+
+  if (localData.value.name.trim().length < 2) {
     errors.value.name = true;
     isValid = false;
   }
 
-  // Простая проверка телефона: начинается с +, допускает цифры, пробелы, скобки, тире. От 7 до 15 символов.
-  const phoneRegex = /^\+?[0-9\s\-()]{7,15}$/;
-  if (!phoneRegex.test(localData.value.phoneNumber.trim())) {
+  if (!phoneRegex.test(localData.value.phoneNumber)) {
     errors.value.phoneNumber = true;
     isValid = false;
   }
