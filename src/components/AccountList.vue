@@ -1,7 +1,7 @@
 <template>
   <div class="list-wrapper" :class="{ 'is-centered-layout': store.accounts.length === 0 }">
 
-    <button class="btn-add" @click="store.addEmptyAccount">
+    <button class="btn-add" @click="store.addEmptyAccount" :disabled="!allAccountsApproved">
       +
     </button>
 
@@ -17,11 +17,16 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useStore } from '../store/account.store.ts';
 import AccountItem from './AccountItem.vue';
 
 const store = useStore();
+
+const allAccountsApproved = computed(() => {
+  return store.accounts.length >= 0 && store.accounts.every(acc => acc.isSaved);
+});
+
 onMounted(() => {
   if (store.accounts.length === 0) {
     store.addEmptyAccount();
@@ -61,9 +66,15 @@ onMounted(() => {
   transition: transform 0.2s, background-color 0.2s;
 }
 
-.btn-add:hover {
+.btn-add:hover:not(:disabled) {
   background-color: #4f46e5;
   transform: scale(1.05);
+}
+
+.btn-add:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .accounts-container {

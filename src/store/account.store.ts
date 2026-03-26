@@ -13,7 +13,7 @@ export const useStore = defineStore('account', () => {
 
     const loadFromLocalStorage = () => {
         try {
-            const saved = localStorage.getItem("account");
+            const saved = localStorage.getItem("accounts");
             if (saved) {
                 const parsed = JSON.parse(saved)
                 if(Array.isArray(parsed)) {
